@@ -25,6 +25,7 @@ The app connects to MongoDB before it starts listening. The local `.env` file is
 | Method | Path | Success | Not found |
 | --- | --- | --- | --- |
 | `GET` | `/books` | `200` with an array of books | — |
+| `GET` | `/books/:id` | `200` with the matching book | `404` with `{ "message": "Book not found" }` |
 
 Unexpected database or server errors return `500` with `{ "message": "Internal server error" }`.
 
