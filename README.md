@@ -20,6 +20,14 @@ An Express web service that reads book records from MongoDB.
 
 The app connects to MongoDB before it starts listening. The local `.env` file is ignored by Git; do not commit database credentials.
 
+## API
+
+| Method | Path | Success | Not found |
+| --- | --- | --- | --- |
+| `GET` | `/books` | `200` with an array of books | — |
+
+Unexpected database or server errors return `500` with `{ "message": "Internal server error" }`.
+
 ## Deployment
 
 Configure `MONGODB_URI` and `MONGODB_DB_NAME` in the hosting provider's environment settings. Render supplies `PORT` automatically. Add the Render service's outbound IP ranges to the MongoDB Atlas IP access list.
