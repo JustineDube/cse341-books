@@ -22,6 +22,8 @@ The app connects to MongoDB before it starts listening. The local `.env` file is
 
 ## API
 
+Interactive API documentation is available at `/api-docs` when the server is running. Regenerate the OpenAPI document after changing route comments with `npm run swagger`.
+
 | Method | Path | Success | Not found |
 | --- | --- | --- | --- |
 | `GET` | `/books` | `200` with an array of books | — |
