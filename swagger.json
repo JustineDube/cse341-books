@@ -11,6 +11,238 @@
       "description": "Current server"
     }
   ],
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal server error"
+          }
+        }
+      },
+      "Book": {
+        "type": "object",
+        "required": [
+          "id",
+          "authorId",
+          "title",
+          "publicationDate"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "b1"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "a1"
+          },
+          "title": {
+            "type": "string",
+            "example": "Pride and Prejudice"
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1813-01-28"
+          }
+        }
+      },
+      "BookInput": {
+        "type": "object",
+        "required": [
+          "id",
+          "authorId",
+          "title",
+          "publicationDate"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "example": "b4"
+          },
+          "authorId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "example": "a1"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "example": "Example Book Title"
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-01-15"
+          }
+        }
+      },
+      "BookUpdate": {
+        "type": "object",
+        "required": [
+          "authorId",
+          "title",
+          "publicationDate"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "authorId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "example": "a2"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "example": "Updated Book Title"
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-02-20"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "birthYear"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Austen"
+          },
+          "birthYear": {
+            "type": "integer",
+            "example": 1775
+          }
+        }
+      },
+      "AuthorInput": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "birthYear"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "example": "a4"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Example Author"
+          },
+          "birthYear": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 1980
+          }
+        }
+      },
+      "AuthorUpdate": {
+        "type": "object",
+        "required": [
+          "name",
+          "birthYear"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Updated Author"
+          },
+          "birthYear": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 1981
+          }
+        }
+      }
+    },
+    "responses": {
+      "InternalServerError": {
+        "description": "Unexpected server or database error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "Internal server error"
+            }
+          }
+        }
+      },
+      "InvalidAuthorData": {
+        "description": "Invalid author data",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "Invalid author data"
+            }
+          }
+        }
+      },
+      "InvalidBookData": {
+        "description": "Invalid book data or unknown author ID",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "Invalid book data"
+            }
+          }
+        }
+      },
+      "UnsupportedMediaType": {
+        "description": "Request must use application/json",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "Content-Type must be application/json"
+            }
+          }
+        }
+      }
+    }
+  },
   "paths": {
     "/books": {
       "get": {
@@ -26,59 +258,77 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "author",
-                      "title",
-                      "publicationDate"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "example": "b1"
-                      },
-                      "author": {
-                        "type": "string",
-                        "example": "Maya Rivera"
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "Patterns of Light"
-                      },
-                      "publicationDate": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2021-08-17"
-                      }
-                    }
+                    "$ref": "#/components/schemas/Book"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Unexpected server error",
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a book",
+        "tags": [
+          "Books"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookInput"
+              },
+              "example": {
+                "id": "b4",
+                "authorId": "a1",
+                "title": "Example Book Title",
+                "publicationDate": "2026-01-15"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Internal server error"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Book"
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidBookData"
+          },
+          "409": {
+            "description": "Book ID already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Book id already exists"
+                }
+              }
+            }
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
     },
     "/books/{id}": {
       "get": {
-        "summary": "Retrieve a book by ID",
+        "summary": "Retrieve a book by custom ID",
         "tags": [
           "Books"
         ],
@@ -87,7 +337,7 @@
             "in": "path",
             "name": "id",
             "required": true,
-            "description": "The book's ID",
+            "description": "The book's custom ID",
             "schema": {
               "type": "string"
             },
@@ -100,32 +350,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "id",
-                    "author",
-                    "title",
-                    "publicationDate"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "example": "b1"
-                    },
-                    "author": {
-                      "type": "string",
-                      "example": "Maya Rivera"
-                    },
-                    "title": {
-                      "type": "string",
-                      "example": "Patterns of Light"
-                    },
-                    "publicationDate": {
-                      "type": "string",
-                      "format": "date",
-                      "example": "2021-08-17"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Book"
                 }
               }
             }
@@ -135,37 +360,373 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Book not found"
-                    }
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace a book's editable fields",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The book's custom ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b1"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookUpdate"
+              },
+              "example": {
+                "authorId": "a2",
+                "title": "Updated Book Title",
+                "publicationDate": "2026-02-20"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidBookData"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The book's custom ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Book deleted; no response body"
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Book not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Retrieve all authors",
+        "tags": [
+          "Authors"
+        ],
+        "responses": {
+          "200": {
+            "description": "Authors retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Unexpected server error",
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an author",
+        "tags": [
+          "Authors"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorInput"
+              },
+              "example": {
+                "id": "a4",
+                "name": "Example Author",
+                "birthYear": 1980
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Author created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Internal server error"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Author"
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidAuthorData"
+          },
+          "409": {
+            "description": "Author ID already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Author id already exists"
+                }
+              }
+            }
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/authors/{id}": {
+      "get": {
+        "summary": "Retrieve an author by custom ID",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The author's custom ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "a1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Author"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Author not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace an author's editable fields",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The author's custom ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "a1"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorUpdate"
+              },
+              "example": {
+                "name": "Updated Author",
+                "birthYear": 1981
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Author updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Author"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidAuthorData"
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Author not found"
+                }
+              }
+            }
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an author with no books",
+        "tags": [
+          "Authors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "The author's custom ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "a1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Author deleted; no response body"
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Author not found"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Author has books and cannot be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Author has books and cannot be deleted"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
     }
   },
-  "components": {},
   "tags": []
 }

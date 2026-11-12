@@ -16,6 +16,8 @@ const connectToDb = async () => {
     const client = new MongoClient(MONGODB_URI);
     await client.connect();
     db = client.db(MONGODB_DB_NAME);
+    await db.collection('authors').createIndex({ id: 1 }, { unique: true });
+    await db.collection('books').createIndex({ id: 1 }, { unique: true });
 
     return db;
 };
